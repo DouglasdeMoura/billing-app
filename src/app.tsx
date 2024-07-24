@@ -1,18 +1,38 @@
-import { useState } from 'react'
+import { Select } from '~/components/select'
+import { TextField } from '~/components/text-field'
+import { Title } from '~/components/title'
 
 export const App: React.FC = () => {
-  const [visible, setVisible] = useState(false)
-
   return (
-    <div>
+    <section>
       <header>
-        <h1>Hello, World!</h1>
+        <Title>Setup your subscription</Title>
       </header>
-      <p>This is your home page.</p>
-      <button type="button" onClick={() => setVisible((state) => !state)}>
-        {visible ? 'Hide' : 'Show'}
-      </button>
-      {visible && <p>Now you see me!</p>}
-    </div>
+      <div>
+        <TextField label="Initial Price" />
+
+        <div>
+          <TextField label="Billing frequency" />
+          <Select options={[{ id: 'months', children: 'Months' }]} />
+        </div>
+
+        <TextField label="Monthly payment" />
+
+        <div>
+          <TextField label="Trial period" />
+          <Select
+            options={[
+              { id: 'days', children: 'days' },
+              { id: 'weeks', children: 'Weeks' },
+            ]}
+          />
+        </div>
+
+        <TextField label="Duration" />
+
+        <TextField label="Billing Cycles" />
+      </div>
+      <div>Your customer will be charged</div>
+    </section>
   )
 }

@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react'
 import { App } from './app'
 
 export default {
-  title: 'App',
+  title: 'pages/App',
   component: App,
 } as Meta<typeof App>
 
