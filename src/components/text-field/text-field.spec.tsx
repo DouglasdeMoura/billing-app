@@ -3,7 +3,7 @@ import { describe, it, expect } from 'vitest'
 
 import { TextField } from '.'
 
-describe('Select', () => {
+describe('TextField', () => {
   it('should render the component', async () => {
     render(
       <TextField
