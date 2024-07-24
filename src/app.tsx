@@ -5,14 +5,14 @@ import { Title } from '~/components/title'
 
 export const App: React.FC = () => {
   return (
-    <section>
+    <section className="m-auto max-w-screen-lg p-4">
       <header>
-        <Title>Setup your subscription</Title>
+        <Title className="text-center">Setup your subscription</Title>
       </header>
       <Form>
         <TextField label="Initial Price" />
 
-        <div>
+        <div className="flex">
           <TextField label="Billing frequency" />
           <Select options={[{ id: 'months', children: 'Months' }]} />
         </div>
