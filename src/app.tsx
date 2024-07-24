@@ -1,3 +1,4 @@
+import { Form } from '~/components/form'
 import { Select } from '~/components/select'
 import { TextField } from '~/components/text-field'
 import { Title } from '~/components/title'
@@ -8,7 +9,7 @@ export const App: React.FC = () => {
       <header>
         <Title>Setup your subscription</Title>
       </header>
-      <div>
+      <Form>
         <TextField label="Initial Price" />
 
         <div>
@@ -31,7 +32,7 @@ export const App: React.FC = () => {
         <TextField label="Duration" />
 
         <TextField label="Billing Cycles" />
-      </div>
+      </Form>
       <div>Your customer will be charged</div>
     </section>
   )

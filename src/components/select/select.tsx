@@ -9,12 +9,15 @@ import {
   ValidationResult,
 } from 'react-aria-components'
 
-import { composeTailwindRenderProps, focusRing } from '../../utils/styles'
+import { composeTailwindRenderProps, focusRing } from '~/utils/styles'
 
-import { Description, FieldError, Label } from '../field'
-import { DropdownItem, DropdownSection, DropdownSectionProps } from '../ListBox'
-import { Popover } from '../pop-over/pop-over'
-
+import { Description, FieldError, Label } from '~/components/field'
+import {
+  DropdownItem,
+  DropdownSection,
+  DropdownSectionProps,
+} from '~/components/list-box'
+import { Popover } from '~/components/pop-over'
 import { ChevronDown } from 'lucide-react'
 import { tv } from 'tailwind-variants'
 
