@@ -14,12 +14,21 @@ const TwoInputs: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
   return <div className="grid grid-cols-2 gap-2 items-end">{children}</div>
 }
 
+const formatPrice = (value: number) => {
+  const formatter = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+  })
+
+  return formatter.format(value)
+}
+
 type ControlledFieldProps = {
   label?: string
   'aria-label'?: string
   name: string
   options?: { id: string; children: string }[]
-  type?: 'number' | 'text'
+  type?: 'number' | 'text' | 'currency'
   disabled?: boolean
   required?: boolean
   defaultValue?: string | number
@@ -52,7 +61,7 @@ const ControlledField: React.FC<ControlledFieldProps> = ({
     })
   }
 
-  if (type === 'number') {
+  if (type === 'number' || type === 'currency') {
     const value = searchParams.get(name) ? +searchParams.get(name)! : undefined
 
     return (
@@ -65,6 +74,15 @@ const ControlledField: React.FC<ControlledFieldProps> = ({
         minValue={0}
         isDisabled={disabled}
         isRequired={required}
+        formatOptions={
+          type === 'currency'
+            ? {
+                style: 'currency',
+                currency: 'USD',
+                currencySign: 'accounting',
+              }
+            : undefined
+        }
       />
     )
   }
@@ -118,10 +136,22 @@ export const App: React.FC = () => {
   }
 
   const paymentFrequencyLabel = getPaymentFrequency()
+  const trialPeriod = searchParams.get('trialPeriod')
+    ? +searchParams.get('trialPeriod')!
+    : null
+  const period = searchParams.get('period') || ''
+  const formattedTrialPeriod = trialPeriod
+    ? trialPeriod > 1
+      ? `${trialPeriod} ${searchParams.get('period')?.toLowerCase()}`
+      : `${trialPeriod} ${searchParams
+          .get('period')
+          ?.slice(0, period.length - 1)
+          ?.toLowerCase()}`
+    : null
 
   return (
-    <section className="m-auto container p-4">
-      <header className="mb-8">
+    <section className="m-auto container p-4 flex flex-col gap-4">
+      <header className="mb-4">
         <Title className="text-center">Setup your subscription</Title>
       </header>
       <Form>
@@ -129,7 +159,7 @@ export const App: React.FC = () => {
           <ControlledField
             label="Initial Price"
             name="initialPrice"
-            type="number"
+            type="currency"
           />
 
           <TwoInputs>
@@ -157,6 +187,7 @@ export const App: React.FC = () => {
             }
             name="paymentFrequency"
             disabled={!paymentFrequencyLabel}
+            type="currency"
           />
         </Line>
 
@@ -167,6 +198,7 @@ export const App: React.FC = () => {
               name="trialPeriod"
               type="number"
               disabled={searchParams.get('period') === 'none'}
+              required
             />
             <ControlledField
               aria-label="Select the trial period"
@@ -176,6 +208,7 @@ export const App: React.FC = () => {
                 { id: 'weeks', children: 'Weeks' },
                 { id: 'months', children: 'Months' },
               ]}
+              defaultValue={searchParams.get('period') || 'none'}
               name="period"
               required
             />
@@ -202,7 +235,20 @@ export const App: React.FC = () => {
           ) : null}
         </Line>
       </Form>
-      <div>Your customer will be charged</div>
+      <div className="p-4 border border-slate-200 rounded-lg dark:text-slate-200 mt-4">
+        {searchParams.get('initialPrice') ? (
+          <>
+            Your customer will be charged{' '}
+            {formatPrice(+searchParams.get('initialPrice')!)} immediately
+          </>
+        ) : null}
+        {searchParams.get('trialPeriod') &&
+        searchParams.get('period') &&
+        searchParams.get('period') !== 'none' ? (
+          <> for their {formattedTrialPeriod} trial period</>
+        ) : null}
+        .
+      </div>
     </section>
   )
 }
