@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react'
 
-import { App } from './app'
+import { App } from '.'
 
 export default {
   title: 'pages/App',
