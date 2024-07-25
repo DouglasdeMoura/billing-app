@@ -159,12 +159,15 @@ export const App: React.FC = () => {
               label="Trial period"
               name="trialPeriod"
               type="number"
+              disabled={searchParams.get('period') === 'none'}
             />
             <ControlledField
               aria-label="Select the trial period"
               options={[
+                { id: 'none', children: 'None' },
                 { id: 'days', children: 'Days' },
                 { id: 'weeks', children: 'Weeks' },
+                { id: 'months', children: 'Months' },
               ]}
               name="period"
             />
