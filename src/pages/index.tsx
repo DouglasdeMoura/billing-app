@@ -20,6 +20,7 @@ type ControlledFieldProps = {
   name: string
   options?: { id: string; children: string }[]
   type?: 'number' | 'text'
+  disabled?: boolean
 }
 
 const ControlledField: React.FC<ControlledFieldProps> = ({
@@ -28,6 +29,7 @@ const ControlledField: React.FC<ControlledFieldProps> = ({
   type,
   'aria-label': ariaLabel,
   options,
+  disabled,
 }) => {
   const [searchParams, setSearchParam] = useSearchParams()
 
@@ -57,6 +59,7 @@ const ControlledField: React.FC<ControlledFieldProps> = ({
         defaultValue={value}
         onChange={handleChange}
         minValue={0}
+        isDisabled={disabled}
       />
     )
   }
@@ -71,6 +74,7 @@ const ControlledField: React.FC<ControlledFieldProps> = ({
         name={name}
         defaultSelectedKey={value}
         onSelectionChange={handleChange}
+        isDisabled={disabled}
       />
     )
   }
@@ -82,11 +86,32 @@ const ControlledField: React.FC<ControlledFieldProps> = ({
       name={name}
       defaultValue={value}
       onChange={handleChange}
+      isDisabled={disabled}
     />
   )
 }
 
 export const App: React.FC = () => {
+  const [searchParams] = useSearchParams()
+
+  const getPaymentFrequency = () => {
+    const options = {
+      days: 'Daily',
+      weeks: 'Weekly',
+      months: 'Monthly',
+    }
+
+    const frequency = searchParams.get('frequency') || ''
+
+    if (frequency in options) {
+      return options[frequency as keyof typeof options]
+    }
+
+    return ''
+  }
+
+  const paymentFrequencyLabel = getPaymentFrequency()
+
   return (
     <section className="m-auto container p-4">
       <header className="mb-8">
@@ -108,12 +133,24 @@ export const App: React.FC = () => {
             />
             <ControlledField
               aria-label="Select the billing frequency"
-              options={[{ id: 'months', children: 'Months' }]}
+              options={[
+                { id: 'days', children: 'Days' },
+                { id: 'weeks', children: 'Weeks' },
+                { id: 'months', children: 'Months' },
+              ]}
               name="frequency"
             />
           </TwoInputs>
 
-          <TextField label="Monthly payment" />
+          <ControlledField
+            label={
+              paymentFrequencyLabel
+                ? `${paymentFrequencyLabel} payment`
+                : 'Payment'
+            }
+            name="paymentFrequency"
+            disabled={!paymentFrequencyLabel}
+          />
         </Line>
 
         <Line>
