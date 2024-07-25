@@ -21,6 +21,8 @@ type ControlledFieldProps = {
   options?: { id: string; children: string }[]
   type?: 'number' | 'text'
   disabled?: boolean
+  required?: boolean
+  defaultValue?: string | number
 }
 
 const ControlledField: React.FC<ControlledFieldProps> = ({
@@ -30,6 +32,8 @@ const ControlledField: React.FC<ControlledFieldProps> = ({
   'aria-label': ariaLabel,
   options,
   disabled,
+  required,
+  defaultValue,
 }) => {
   const [searchParams, setSearchParam] = useSearchParams()
 
@@ -56,10 +60,11 @@ const ControlledField: React.FC<ControlledFieldProps> = ({
         aria-label={ariaLabel}
         label={label}
         name={name}
-        defaultValue={value}
+        defaultValue={value ?? (defaultValue as unknown as number)}
         onChange={handleChange}
         minValue={0}
         isDisabled={disabled}
+        isRequired={required}
       />
     )
   }
@@ -72,9 +77,10 @@ const ControlledField: React.FC<ControlledFieldProps> = ({
         aria-label={ariaLabel}
         options={options}
         name={name}
-        defaultSelectedKey={value}
+        defaultSelectedKey={value ?? defaultValue}
         onSelectionChange={handleChange}
         isDisabled={disabled}
+        isRequired={required}
       />
     )
   }
@@ -84,9 +90,10 @@ const ControlledField: React.FC<ControlledFieldProps> = ({
       aria-label={ariaLabel}
       label={label}
       name={name}
-      defaultValue={value}
+      defaultValue={value ?? (defaultValue as unknown as string)}
       onChange={handleChange}
       isDisabled={disabled}
+      isRequired={required}
     />
   )
 }
@@ -170,12 +177,29 @@ export const App: React.FC = () => {
                 { id: 'months', children: 'Months' },
               ]}
               name="period"
+              required
             />
           </TwoInputs>
 
-          <ControlledField label="Duration" name="duration" />
+          <ControlledField
+            label="Duration"
+            name="duration"
+            options={[
+              { id: 'neverEnds', children: 'Never ends' },
+              { id: 'customize', children: 'Customize' },
+            ]}
+            defaultValue="neverEnds"
+            required
+          />
 
-          <ControlledField label="Billing Cycles" name="billingCycles" />
+          {searchParams.get('duration') &&
+          searchParams.get('duration') !== 'neverEnds' ? (
+            <ControlledField
+              label="Billing Cycles"
+              name="billingCycles"
+              type="number"
+            />
+          ) : null}
         </Line>
       </Form>
       <div>Your customer will be charged</div>
