@@ -104,7 +104,9 @@ export function Select<T extends object>({
   return (
     <SelectWrapper {...props}>
       {options?.map(({ children, id }) => (
-        <SelectItem key={id}>{children}</SelectItem>
+        <SelectItem key={id} id={id}>
+          {children}
+        </SelectItem>
       ))}
     </SelectWrapper>
   )
